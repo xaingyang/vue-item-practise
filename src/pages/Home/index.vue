@@ -6,6 +6,7 @@
     <Rank/>
     <Like/>
     <Floor/>
+    <Floor/>
     <Brand/>
   </div>
 
@@ -21,6 +22,11 @@ import Brand from './Brand/Brand'
 
 export default {
   name: 'Home',
+
+  mounted(){
+    this.$store.dispatch('getFloors')
+  },
+  
   components:{
     ListContainer,
     TodayRecommend,

@@ -8,4 +8,4 @@ export function reqLogin(mobile,password){
     })
 }
 
-export const reqCategoryList=()=>ajax('/product/getBaseCategpryList')
+export const reqCategoryList=()=>ajax('/product/getBaseCategoryList')

@@ -15,8 +15,10 @@ export default {
   name: "App",
 
   async mounted (){
-      const result = await reqCategoryList()
-      console.log('result', result)
+      // const result = await reqCategoryList()
+      // console.log('result', result)
+
+      this.$store.dispatch('getCategoryList')
   },
 
   components:{
