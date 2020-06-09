@@ -1,32 +1,33 @@
 <template>
   <div>
-    <Header></Header>
+    <Header />
     <router-view></router-view>
-    <Footer v-if="!$route.meta.isHideFooter"></Footer>
+    <Footer v-if='!$route.meta.isHideFooter' />
+    <LoginFooter v-else />
   </div>
 </template>
 
-<script>
-import Header from './components/Header'
-import Footer from './components/Footer'
-// import {reqCategoryList} from './api'
+<script type="text/ecmascript-6">
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+//登录注册的底部
+import LoginFooter from './components/LoginFooter'
 
 export default {
-  name: "App",
-
-  async mounted (){
-      // const result = await reqCategoryList()
-      // console.log('result', result)
-
-      this.$store.dispatch('getCategoryList')
-  },
-
-  components:{
-    Header,
-    Footer
-  },
+  name:'App',
+  mounted(){
+    this.$store.dispatch('getCategoryList')
+    
   
+  },
+
+  components: {
+    Header,
+    Footer,
+    LoginFooter
+  }
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang='less' scoped>
+</style>

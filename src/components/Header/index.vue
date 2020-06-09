@@ -27,13 +27,12 @@
     <div class="bottom">
       <h1 class="logoArea">
         <router-link to="/">
-          <img src="./images/logo.png" alt="">
+          <img src="./images/logo.png" alt />
         </router-link>
       </h1>
-
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input type="text" id="autocomplete" class="input-error input-xxlarge"  v-model="keyword"/>
+          <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyWord" />
           <button class="sui-btn btn-xlarge btn-danger" type="button" @click="search">搜索</button>
         </form>
       </div>
@@ -41,131 +40,130 @@
   </header>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 export default {
-  name: 'Header',
-  data(){
+  data() {
     return {
-      keyword:''
-    }
+      keyWord: ""
+    };
   },
-
-  methods:{
-    search(){
-      const {keyword}=this
-
-      const location={
-        name:'search'
+  methods: {
+    search() {
+      let { keyWord } = this;
+      // this.$router.push(`/search/${keyWord}/?keysear=${keyWord}`)
+      // this.$router.push({name:'search',params:{keyword:keyWord},query:{keysear:keyWord}})
+      let searchKey = {
+        name: "search",
+      };
+      if (keyWord) {
+        searchKey.params = { keyword: keyWord };
       }
-      if(keyword){
-        location.params={keyword}
-        // location.query={keyword2:keyword.toUpperCase()}
+      searchKey.query = this.$route.query
+      let searchPost={
+        keyword:keyWord,
+        ...searchKey.query
       }
-
-      location.query=this.$route.query
-      // this.$router.push(location).catch(()=>{
-        
-      // })
-       this.$router.push(location)
+      console.log(searchPost)
+      this.$router.push(searchKey);
+      this.$store.dispatch("getProductList", searchPost);
     }
   }
-}
+};
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .header {
-    &>.top {
-      background-color: #eaeaea;
-      height: 30px;
-      line-height: 30px;
+  & > .top {
+    background-color: #eaeaea;
+    height: 30px;
+    line-height: 30px;
 
-      .container {
-        width: 1200px;
-        margin: 0 auto;
-        overflow: hidden;
-
-        .loginList {
-          float: left;
-
-          p {
-            float: left;
-            margin-right: 10px;
-
-            .register {
-              border-left: 1px solid #b3aeae;
-              padding: 0 5px;
-              margin-left: 5px;
-            }
-          }
-        }
-
-        .typeList {
-          float: right;
-
-          a {
-            padding: 0 10px;
-
-            &+a {
-              border-left: 1px solid #b3aeae;
-            }
-          }
-
-        }
-
-      }
-    }
-
-    &>.bottom {
+    .container {
       width: 1200px;
       margin: 0 auto;
       overflow: hidden;
 
-      .logoArea {
+      .loginList {
         float: left;
 
-        .logo {
-          img {
-            width: 175px;
-            margin: 25px 45px;
+        p {
+          float: left;
+          margin-right: 10px;
+
+          .register {
+            border-left: 1px solid #b3aeae;
+            padding: 0 5px;
+            margin-left: 5px;
           }
         }
       }
 
-      .searchArea {
+      .typeList {
         float: right;
-        margin-top: 35px;
 
-        .searchForm {
-          overflow: hidden;
+        a {
+          padding: 0 10px;
 
-          input {
-            box-sizing: border-box;
-            width: 490px;
-            height: 32px;
-            padding: 0px 4px;
-            border: 2px solid #ea4a36;
-            float: left;
-
-            &:focus {
-              outline: none;
-            }
-          }
-
-          button {
-            height: 32px;
-            width: 68px;
-            background-color: #ea4a36;
-            border: none;
-            color: #fff;
-            float: left;
-            cursor: pointer;
-
-            &:focus {
-              outline: none;
-            }
+          & + a {
+            border-left: 1px solid #b3aeae;
           }
         }
       }
     }
   }
+
+  & > .bottom {
+    width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+
+    .logoArea {
+      float: left;
+
+      .logo {
+        img {
+          width: 175px;
+          margin: 25px 45px;
+        }
+      }
+    }
+
+    .searchArea {
+      float: right;
+      margin-top: 35px;
+
+      .searchForm {
+        overflow: hidden;
+
+        input {
+          box-sizing: border-box;
+          width: 490px;
+          height: 32px;
+          padding: 0px 4px;
+          border: 2px solid #ea4a36;
+          float: left;
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        button {
+          height: 32px;
+          width: 68px;
+          background-color: #ea4a36;
+          border: none;
+          color: #fff;
+          float: left;
+          cursor: pointer;
+
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+    }
+  }
+}
 </style>
+

@@ -1,13 +1,15 @@
 <template>
-  <div>Login</div>
+<div>
+login
+</div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 export default {
-  name: 'Login',
 }
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
+
 
 </style>
