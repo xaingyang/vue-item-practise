@@ -8,10 +8,9 @@
             <h3>今日推荐</h3>
           </div>
         </li>
-        <li class="banner" v-for="(item) in todayImgs" :key="item.id">
-          <img :src="item.imagesUrl" />
+        <li class="banner" v-for="recommend in recommends" :key="recommend.id">
+          <img :src="recommend.imgUrl" />
         </li>
-        
       </ul>
     </div>
   </div>
@@ -21,12 +20,10 @@
 import {mapState} from 'vuex'
 export default {
   name: 'TodayRecommend',
-  mounted() {
-    this.$store.dispatch('getTodayImgs')
-  },
-  computed:{
+
+  computed: {
     ...mapState({
-      todayImgs: state => state.home.todayimgs
+      recommends: state => state.home.recommends
     })
   }
 }

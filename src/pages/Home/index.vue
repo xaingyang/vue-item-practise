@@ -1,53 +1,52 @@
 <template>
   <div>
-    <!-- 商品分类导航 -->
-    <TypeNav />
-    <!--列表-->
-    <ListContainer />
-    <!-- 今日推荐 -->
-    <TodayRecommend/>
-    <!-- 商品排行 -->
-    <Rank/>
-    <!-- 猜你喜欢 -->
-    <Like/>
-    <!-- 俩楼层 -->
-    <Floor v-for="(floor) in floors" :key="floor.id" :floor='floor' />
-    <!-- 商标 -->
-    <Brand/>
+      <TypeNav />
+      <ListContainer />
+      <TodayRecommend />
+      <Rank />
+      <Like />
+      <Floor v-for="floor in floors" :key="floor.id" :floor="floor"/>
+      <Brand />
+        
   </div>
 </template>
 
-<script type="text/ecmascript-6">
-import ListContainer from "./ListContainer";
-import TodayRecommend from "./TodayRecommend";
-import Rank from "./Rank";
-import Like from "./Like";
-import Floor from "./Floor";
-import Brand from "./Brand";
-
+<script>
 import {mapState} from 'vuex'
+
+import ListContainer from './ListContainer/ListContainer'
+import TodayRecommend from './TodayRecommend/TodayRecommend'
+import Rank from './Rank/Rank'
+import Like from './Like/Like'
+import Floor from './Floor/Floor'
+import Brand from './Brand/Brand'
+
 export default {
-  name:'Home',
+  name: 'Home',
+
+  computed: {
+    ...mapState({
+      floors: state => state.home.floors
+    })
+  },
+
+  mounted () {
+    this.$store.dispatch('getFloors')
+    this.$store.dispatch('getBanners')
+    this.$store.dispatch('getRecommends')
+  },
+
   components: {
     ListContainer,
     TodayRecommend,
     Rank,
     Like,
     Floor,
-    Brand
-  },
-  computed:{
-    ...mapState({
-      floors:state=>state.home.floors
-    })
-  },
-  mounted () {
-    this.$store.dispatch('getBanner')
-    // 分发给异步action请求获取楼层列表数据
-    this.$store.dispatch('getFloors')
-  },
-};
+    Brand,
+  }
+}
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
+
 </style>

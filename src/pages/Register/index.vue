@@ -1,17 +1,13 @@
 <template>
-<div>
-    
-register
-
-</div>
+  <div>Register</div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 export default {
+  name: 'Register',
 }
 </script>
 
-<style lang='less' scoped>
-
+<style lang="less" scoped>
 
 </style>
