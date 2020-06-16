@@ -1,3 +1,6 @@
+/* 
+管理首页数据的vuex子模块
+*/
 import {reqCategoryList, reqBanners, reqFloors, reqRecommends} from '@/api'
 
 export default {
@@ -12,17 +15,15 @@ export default {
     RECEIVE_RECOMMENDS (state, recommends) {
       state.recommends = recommends
     },
-    
+   
     RECEIVE_BANNERS (state, banners) {
       state.banners = banners
     },
 
-  
     RECEIVE_FLOORS (state, floors) {
       state.floors = floors
     },
     
-
     RECEIVE_CATEGORY_LIST (state, categoryList) {
       state.categoryList = categoryList
     } 
@@ -38,7 +39,6 @@ export default {
       }
     },
 
-
     async getBanners ({commit}) {
       const result = await reqBanners()
       if (result.code===200) {
@@ -46,6 +46,7 @@ export default {
         commit('RECEIVE_BANNERS', banners)
       }
     },
+
 
     async getFloors ({commit}) {
       const result = await reqFloors()
@@ -55,9 +56,10 @@ export default {
       }
     },
 
+    
     async getCategoryList ({commit}) {
       const result = await reqCategoryList()
-      console.log('result', result)
+      console.log('result', result)    
       if (result.code===200) {
         const categoryList = result.data.filter((item, index) => index<15)
         commit('RECEIVE_CATEGORY_LIST', categoryList)

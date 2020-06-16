@@ -73,7 +73,7 @@
                   <div class="p-img">
                     <router-link :to="`/detail/${item.id}`">
                       <img :src="item.defaultImg" />
-                      </router-link>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -82,7 +82,7 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <router-link :to="`/detail/${item.id}`">{{item.title}}</router-link>
+                    <router-link :to="`/search/${item.id}`">{{item.title}}</router-link>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -118,25 +118,32 @@
 
     data () {
       return {
+        // 用于发搜索请求的条件参数的对象
         options: {
-          category1Id: '', 
-          category2Id: '', 
-          category3Id: '', 
-          categoryName: '', 
-          keyword: '', 
+          category1Id: '', // 一级分类ID
+          category2Id: '', // 二级分类ID
+          category3Id: '', // 三级分类ID
+          categoryName: '', // 分类名称
+          keyword: '', // 搜索关键字
 
-          props: [], 
-          order: '1:desc', 
+          props: [], // 商品属性的数组: ["属性ID:属性值:属性名"] ["2:6.0～6.24英寸:屏幕尺寸"]
+          // trademark: '', // 品牌: "ID:品牌名称" "1:苹果"
+          order: '1:desc', // 排序方式  1: 综合,2: 价格 asc: 升序,desc: 降序  "1:desc"
 
-          pageNo: 1, 
-          pageSize: 5, 
+          pageNo: 1, // 页码
+          pageSize: 2, //	每页数量
         }
       }
     },
 
+    /* 
+    常用的就是在mounted()/create()发ajax请求
+    */
     created () {
+      // 需要根据分类的query参数和关键字的params参数来搜索
+      // 1. 根据query和params参数更新options
       this.updateOptions()
-     
+      // 2. 发搜索请求
       this.getProductList()
     },
 
@@ -151,81 +158,147 @@
     },
 
     watch: {
-      $route(to, from) {    
+      // 监视路由参数的变化
+      $route(to, from) {
+        // 1. 根据query和params参数更新options
         this.updateOptions()
+        // 2. 发搜索请求
         this.getProductList()
       }
     },
 
     methods: {
 
-      setOrder (flag) { 
+      /* 
+      设置新的排序
+      */
+      setOrder (flag) { // '1' / '2'
 
+        // 取出原本的orderFlag和orderType
         let [orderFlag, orderType] = this.options.order.split(':')  // [orderFlag, orderType]
 
+        // 点击当前排序项: 切换排序方式(排序项不变)
         if (flag===orderFlag) {
           orderType = orderType==='asc' ? 'desc' : 'asc'
-        } else { 
+        } else { // 点击非当前排序项: 切换排序项, 排序方式为降序
           orderFlag = flag
           orderType = 'desc'
         }
 
+        // 更新order
         this.options.order = orderFlag + ':' + orderType
 
+        // 重新请求获取数据显示
         this.getProductList()
       },
 
-      isActive (orderFlag) { 
+      /* 
+      判断指定的flag对应的项是否选中
+      */
+      isActive (orderFlag) { // '1' / '2'
         return this.options.order.indexOf(orderFlag)===0
       },
 
+      /* 
+      删除属性条件
+      */
       removeProp (index) {
+        // 删除对应的属性条件
         this.options.props.splice(index, 1)
+        // 重新请求获取列表数据显示
         this.getProductList()
       },
 
+      /* 
+      添加一个属性条件
+      */
       addProp (prop) {
+        // 如果这个属性条件已经存在, 直接结束
         if (this.options.props.indexOf(prop)>=0) return
 
+        // 向props添加prop
         this.options.props.push(prop)
 
+        // 重新请求获取列表数据显示
         this.getProductList()
       },
 
+      /* 
+      移除品牌条件
+      */
       removeTrademark () {
+        // 清除品牌数据
+        // this.options.trademark = ''
+        // delete this.options.trademark  // 不可以
+
+        // this.$delete(this.options, 'trademark')
         Vue.delete(this.options, 'trademark')
 
+        // 重新请求获取列表数据显示
         this.getProductList()
       },
 
+      /* 
+      设置新的品牌数据
+      */
       setTrademark (trademark) {
+        // 如果已经有当前品牌的条件数据, 直接结束
         if (this.options.trademark===trademark) return
 
+        // 更新品牌数据
+        // 直接通过.添加新属性  ==> 不会自动更新界面
+        // this.options.trademark = trademark
+
+        // 直接通过$set添加新属性  ==> 会自动更新界面
+        // this.$set( this.options, 'trademark', trademark )
         Vue.set( this.options, 'trademark', trademark )
 
+        // 重新请求获取列表数据显示
         this.getProductList()
       },
 
+      /* 
+      删除分类条件
+      */
       removeCategory () {
+        // 重置相关数据
         this.options.categoryName = ''
         this.options.category1Id = ''
         this.options.category2Id = ''
         this.options.category3Id = ''
 
+        // 重新请求列表数据   这样不好
+        // this.getProductList()
+        // 重新跳转到当前Search, 干掉分类的query参数
+        // this.$router.push({name: 'search', params: this.$route.params})
         this.$router.replace({name: 'search', params: this.$route.params})
       },
 
+      /* 
+      删除关键字条件
+      */
       removeKeyword () {
+        // 重置相关数据
         this.options.keyword = ''
+        // 重新请求列表数据  这样不好
+        // this.getProductList()
+        // 重新跳转到当前Search, 干掉关键字的params参数
+        // this.$router.push({name: 'search', query: this.$route.query})
         this.$router.replace({name: 'search', query: this.$route.query})
 
+        // 在Search中: 通过事件总线对象分发自定义事件
         this.$bus.$emit('removeKeyword')
       },
 
+      /* 
+      根据query和params参数更新options
+      */
       updateOptions () {
+        // 取出参数数据
         const {categoryName='', category1Id='', category2Id='', category3Id=''} = this.$route.query
         const {keyword=''} = this.$route.params
 
+        // 更新options
         this.options = {
           ...this.options,
           categoryName,
@@ -233,13 +306,17 @@
           category2Id,
           category3Id,
           keyword,
-        } 
+        } // 同名属性覆盖, 非同名属性保留
       },
 
-
+      /* 
+      获取指定页码的商品列表
+      pageNo的默认值是1
+      */
       getProductList (pageNo=1) {
-        
+        // 更新页码数据
         this.options.pageNo = pageNo
+        // 分发异步action, 请求获取数据显示
         this.$store.dispatch('getProductList', this.options)
       },
     },

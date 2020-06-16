@@ -20,8 +20,8 @@ Vue.component('Pagination', Pagination)
 new Vue({
   // el: '#app',
   render: h => h(App),
-  router, 
-  store, 
+  router, // 配置路由器  ==> 所有的组件都可以通过$router属性得到路由器对象
+  store, // 注册vuex的store ==> 所有的组件都可以通过$store来得到store对象
 
   beforeCreate () {
     Vue.prototype.$bus = this

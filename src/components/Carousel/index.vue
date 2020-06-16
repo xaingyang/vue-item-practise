@@ -25,27 +25,31 @@ export default {
     autoplay: Boolean
   },
 
-  watch: {
-    carouselList: {
+  watch: {  
+    carouselList: {     
       handler (value) {
+        
         if (this.carouselList.length===0) return
 
         console.log('carouselList---', value)
+        
         this.$nextTick(() => {
           this.initSwiper()
         })
       },
-      // immediate: true, 
+      // immediate: true, // 初始显示就会调用第一次
     }
   },
+
 
   mounted () {
     console.log('++++', this.carouselList.length)
     
     if (this.carouselList.length>0) { 
-      this.initSwiper()
+      this.initSwiper() 
     }
   },
+
 
   methods: {
     

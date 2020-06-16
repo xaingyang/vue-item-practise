@@ -58,7 +58,7 @@
 </template>
 
 <script>
-  // import _ from 'lodash'  
+  // import _ from 'lodash' 
   import throttle from 'lodash/throttle' 
   import {mapState, mapActions} from 'vuex'
   export default {
@@ -66,7 +66,7 @@
 
     data () {
       return {
-        currentIndex: -2,  
+        currentIndex: -2, 
         isShowFirst: this.$route.path==='/'
       }
     },
@@ -76,6 +76,7 @@
         return this.$store.state.home.categoryList
       },
 
+
       ...mapState({
         categoryList: state => state.home.categoryList
       })
@@ -83,20 +84,24 @@
     },
 
     mounted () {
-
+    
     },
 
     methods: {
-      ...mapActions(['getCategoryList']),  // getCategoryList () {this.$store.dispatch('getCategoryList')}
+      ...mapActions(['getCategoryList']), 
 
+      
       showFirstCategorys () {
+        
         this.isShowFirst = true
+        
         this.currentIndex=-1
       },
 
+      
       hideSubCategorys () {
         this.currentIndex = -2
-  
+        
         if (this.$route.path!=='/') {
           this.isShowFirst = false
         }
@@ -105,7 +110,7 @@
       
       showSubScategorys: throttle(function (index) {
         console.log('showSubScategorys', index)
-      
+       
         if (this.currentIndex!==-2) {
           this.currentIndex = index
         }
@@ -114,6 +119,7 @@
       
       toSearch ({categoryName, category1Id, category2Id, category3Id}) {
 
+       
         const query = {
           categoryName,
         }
@@ -133,12 +139,14 @@
         this.$router.push(location)
       },
 
+      
       toSearch2 (event) {
-  
+      
         const {categoryname, category1id, category2id, category3id} = event.target.dataset
 
         if (!categoryname) return
 
+      
         const query = {
           categoryName: categoryname,
         }
@@ -150,24 +158,26 @@
           query.category3Id = category3id
         }
 
+       
         const location = {
           name: 'search',
           query
         }
 
+       
         const keyword = this.$route.params.keyword
         if (keyword) {
           location.params = {keyword}
         }
 
       
-        if (this.$route.path.indexOf('/search')!==0) { 
+        if (this.$route.path.indexOf('/search')!==0) {  
           this.$router.push(location)
         } else {
           this.$router.replace(location)
         }
 
-        
+       
         this.hideSubCategorys()
       }
     }
