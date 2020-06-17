@@ -8,11 +8,12 @@ import Vuex from 'vuex'
 // import search from './modules/search'
 import modules from './modules'
 
+// 声明使用vue插件
 Vue.use(Vuex)
 
 // const state = {}
 const mutations = {
-  test2 (state) {
+  test2 (state) {// 当前state是总state
 
   }
 }
@@ -26,9 +27,9 @@ const getters = {}
 // 向外暴露store对象
 export default new Vuex.Store({
   // state,
-  mutations, 
-  actions, 
-  getters, 
+  mutations, // 总mutations
+  actions, // 总actions
+  getters, // 总getters
   modules
 })
 

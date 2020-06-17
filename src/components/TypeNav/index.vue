@@ -58,68 +58,88 @@
 </template>
 
 <script>
-  // import _ from 'lodash' 
-  import throttle from 'lodash/throttle' 
+  // import _ from 'lodash'  // 引入整个lodash为, 还没有使用的工具函数也被打包了  4M
+  import throttle from 'lodash/throttle' // 只引入需要的工具函数, 只有引入的被打包了 ==> 打包文件变小了1.4M
   import {mapState, mapActions} from 'vuex'
   export default {
     name: 'TypeNav',
 
     data () {
       return {
-        currentIndex: -2, 
+        currentIndex: -2, // 标识哪个下标的分类项需要显示子分类列表 
         isShowFirst: this.$route.path==='/'
       }
     },
 
     computed: {
+      /* 
+      3级分类列表的计算属性
+      */
       categoryList1 () {
         return this.$store.state.home.categoryList
       },
 
+      // 一旦使用vuex多模块编程 ==> mapState通过数组中的名称直接读取不行
+      // ...mapState(['categoryList'])  // categoryList () {return this.$store.state['categoryList']}
+      /* ...mapState({
+        categoryList: 'categoryList'
+      })  */ // categoryList () {return this.$store.state['categoryList']}
 
       ...mapState({
+        // 右边是一个回调函数, 回调函数接收是总state, 返回值就作为计算属性的值
         categoryList: state => state.home.categoryList
       })
 
     },
 
     mounted () {
-    
+      // 通过store对象的dispatch()来触发异步action getCategoryList执行请求获取数据
+      // this.$store.dispatch('getCategoryList')  // 数据从接口中转移到vuex的state中
+      // this.getCategoryList()
     },
 
     methods: {
-      ...mapActions(['getCategoryList']), 
+      ...mapActions(['getCategoryList']),  // getCategoryList () {this.$store.dispatch('getCategoryList')}
 
-      
+      /* 
+      显示一级分类列表
+      */
       showFirstCategorys () {
-        
+        // 显示一级分类列表
         this.isShowFirst = true
-        
+        // 让子分类列表可以改变为特定下标
         this.currentIndex=-1
       },
 
-      
+      /* 
+      隐藏子分类列表
+      */
       hideSubCategorys () {
         this.currentIndex = -2
-        
+        // 如果当前不是首页, 需要隐藏一级列表
         if (this.$route.path!=='/') {
           this.isShowFirst = false
         }
       },
 
-      
+      /* 
+      显示指定下标对应的子分类列表
+      */
+      // showSubScategorys: _.throttle(function (index) {
       showSubScategorys: throttle(function (index) {
         console.log('showSubScategorys', index)
-       
+        // 只有当光标没有完全离开时, 才更新
         if (this.currentIndex!==-2) {
           this.currentIndex = index
         }
       }, 200),
 
-      
+      /* 
+      跳转到Search路由
+      */
       toSearch ({categoryName, category1Id, category2Id, category3Id}) {
 
-       
+        // 准备query
         const query = {
           categoryName,
         }
@@ -139,14 +159,19 @@
         this.$router.push(location)
       },
 
-      
+      /* 
+      利用事件委托来监听每个分类项的点击
+      */
       toSearch2 (event) {
-      
+        // const tagName = event.target.tagName
+        // console.log(event.target.tagName)
+        // 取出data自定义属性值
         const {categoryname, category1id, category2id, category3id} = event.target.dataset
 
+        // 如果点击的不 是分类项, 直接结束
         if (!categoryname) return
 
-      
+        // 准备query
         const query = {
           categoryName: categoryname,
         }
@@ -158,26 +183,28 @@
           query.category3Id = category3id
         }
 
-       
+        // 准备跳转路由的location
         const location = {
           name: 'search',
           query
         }
 
-       
+        // 取出当前params中的keyword, 如果有值, 携带上
         const keyword = this.$route.params.keyword
         if (keyword) {
           location.params = {keyword}
         }
 
-      
-        if (this.$route.path.indexOf('/search')!==0) {  
+        // 跳转到Search
+        // 如果当前没有在search, 用push, 否则用replace
+        // if (this.$route.name!=='search') {
+        if (this.$route.path.indexOf('/search')!==0) {  // 可能是/search/xxx
           this.$router.push(location)
         } else {
           this.$router.replace(location)
         }
 
-       
+        // 自动隐藏列表
         this.hideSubCategorys()
       }
     }

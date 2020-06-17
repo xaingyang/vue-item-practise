@@ -30,6 +30,9 @@
       }
     },
 
+    /* 
+    在显示之前, 读取sessionStorage中保存的skuInfo的数据
+    */
     beforeMount () {
       this.skuInfo = JSON.parse(window.sessionStorage.getItem('SKU_INFO_KEY'))
     }
