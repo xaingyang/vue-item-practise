@@ -100,7 +100,12 @@ export default {
 
       try {
         await this.$store.dispatch("login", { mobile, password });
-        this.$router.replace("/");
+        const redirect = this.$route.query.redirect;
+        if (redirect) {
+          this.$router.replace(redirect);
+        } else {
+          this.$router.replace("/");
+        }
       } catch (error) {
         alert(error.message);
       }

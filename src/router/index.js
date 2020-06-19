@@ -80,9 +80,10 @@ router.beforeEach((to, from, next) => {
     if (token) {
       next();
     } else {
-      next("/login");
+      //如果没有登录，强制跳转到login界面
+      next("/login?redirect=" + targetPath);
     }
-    //如果没有登录，强制跳转到login界面
+
   } else {
     //不需要检查 直接放行
     // 放行
